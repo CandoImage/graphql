@@ -127,6 +127,11 @@ class BlocksByRegion extends FieldPluginBase implements ContainerFactoryPluginIn
         'theme' => $activeTheme->getName(),
         'region' => $args['region'],
       ]);
+      
+      // For some very odd reason we need to make this url "unique" - otherwise we'll 
+      // run into a "Call to a member function getValue() on null" error - but only on
+      // a warm cache.
+      $value->setRouteParameters(array_merge($value->getRouteParameters(), $args));
 
       $resolve = $this->subRequestBuffer->add($value, function () use ($blocks) {
         $blocks = array_filter($blocks, function (Block $block) {
